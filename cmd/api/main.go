@@ -6,7 +6,7 @@ import (
 
 func main() {
 	server := api.NewServer(api.Config{
-		Port: "3000",
+		Port: "1927",
 	})
 
 	_ = server.Serve()

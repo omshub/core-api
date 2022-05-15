@@ -12,7 +12,7 @@ func TestIndex(t *testing.T) {
 	cleanup := testServer(t)
 	defer cleanup()
 
-	resp, err := http.Get("http://localhost:3000")
+	resp, err := http.Get("http://localhost:1927")
 	require.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -23,7 +23,7 @@ func TestPing(t *testing.T) {
 	cleanup := testServer(t)
 	defer cleanup()
 
-	resp, err := http.Get("http://localhost:3000/ping")
+	resp, err := http.Get("http://localhost:1927/ping")
 	require.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -40,7 +40,7 @@ func TestPing(t *testing.T) {
 
 func testServer(t *testing.T) func() {
 	server := NewServer(Config{
-		Port: "3000",
+		Port: "1927",
 	})
 
 	go func() {
