@@ -7,3 +7,6 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 
 # Delve for debugging
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+# goimports for source formatting
+RUN go install golang.org/x/tools/cmd/goimports@latest
