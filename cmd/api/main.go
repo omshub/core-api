@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"omshub/core-api/internal/api"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -10,5 +11,5 @@ func main() {
 	router.GET("/", api.Index)
 	router.GET("/ping", api.Ping)
 
-	router.Run(":3000")
+	_ = router.Run(":3000")
 }
