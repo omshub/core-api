@@ -11,5 +11,5 @@ func main() {
 	router.GET("/", api.Index)
 	router.GET("/ping", api.Ping)
 
-	router.Run(":3000")
+	_ = router.Run(":3000")
 }
