@@ -19,3 +19,11 @@ ensure-deps:
 	@go mod tidy
 	@go mod vendor
 	@git diff --exit-code
+
+.PHONY: fmt-deps
+fmt-deps:
+	@go install golang.org/x/tools/cmd/goimports@latest
+
+.PHONY: fmt
+fmt: fmt-deps
+	@goimports -w cmd/ internal/

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"omshub/core-api/internal/api"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
