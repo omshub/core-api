@@ -1,3 +1,4 @@
+ENTRYPOINT:=cmd/api/main.go
 BIN:=core-api
 
 .PHONY: test
@@ -10,7 +11,7 @@ test-ci:
 
 .PHONY: build
 build:
-	go build -o $(BIN) ./cmd/api/main.go
+	go build -o $(BIN) $(ENTRYPOINT)
 
 # ensures that dependencies have been tidied and vendored
 .PHONY: ensure-deps
@@ -27,3 +28,7 @@ fmt-deps:
 .PHONY: fmt
 fmt: fmt-deps
 	@goimports -w cmd/ internal/
+
+.PHONY: debug
+debug:
+	@dlv debug $(ENTRYPOINT)
