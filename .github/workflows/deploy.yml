@@ -1,0 +1,20 @@
+name: deploy
+
+# TODO: change this to run only on pushes to main.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DigitalOcean App Platform deployment
+        uses: digitalocean/app_action@main
+        with:
+          app_name: core-api
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
