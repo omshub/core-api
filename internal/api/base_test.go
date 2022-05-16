@@ -39,9 +39,7 @@ func TestPing(t *testing.T) {
 }
 
 func testServer(t *testing.T) func() {
-	server := NewServer(Config{
-		Port: "1927",
-	})
+	server := NewServer(DefaultConfig())
 
 	go func() {
 		_ = server.Serve()
