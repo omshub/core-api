@@ -2,14 +2,12 @@ package main
 
 import (
 	"omshub/core-api/internal/api"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/", api.Index)
-	router.GET("/ping", api.Ping)
+	server := api.NewServer(api.Config{
+		Port: "1927",
+	})
 
-	_ = router.Run(":1927")
+	_ = server.Serve()
 }
