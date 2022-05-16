@@ -16,6 +16,8 @@ jobs:
     defaults:
       run:
         working-directory: ./ops
+    env:
+      TF_VAR_do_token: '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,7 +30,7 @@ jobs:
         run: terraform fmt -check
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
@@ -69,7 +71,7 @@ jobs:
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
-      - name: Terraform Apply
+      - name: Terraform Apply 
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
