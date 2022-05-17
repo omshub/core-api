@@ -38,7 +38,7 @@ func (s *Server) Serve() error {
 }
 
 func (s *Server) Shutdown() error {
-	ctx, cancel := context.WithTimeout(context.Background(), s.config.ShutdownDuration)
+	ctx, cancel := context.WithTimeout(context.Background(), s.config.ShutdownTimeout)
 	defer cancel()
 
 	return s.httpServer.Shutdown(ctx)
