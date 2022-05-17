@@ -1,5 +1,7 @@
 package api
 
 type Config struct {
-	Port string
+	Port            string
+	NewRelicAPIKey  string
+	NewRelicAppName string
 }

@@ -2,10 +2,13 @@ package api
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 type Server struct {
@@ -16,6 +19,18 @@ type Server struct {
 
 func NewServer(config Config) *Server {
 	router := gin.Default()
+
+	// TODO: improve error handling and error logging
+	if config.NewRelicAPIKey != "" && config.NewRelicAppName != "" {
+		app, err := newRelicApplication(config.NewRelicAppName, config.NewRelicAPIKey)
+		if err != nil {
+			log.Printf("error configuring NewRelic: %v", err)
+		} else {
+			router.Use(nrgin.Middleware(app))
+		}
+	} else {
+		log.Printf("NewRelic configuration not found. Code will not be instrumented.")
+	}
 
 	httpServer := &http.Server{
 		Addr:    ":" + config.Port,
@@ -53,4 +68,12 @@ func (s *Server) Ping(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "pong",
 	})
+}
+
+func newRelicApplication(appName string, apiKey string) (*newrelic.Application, error) {
+	return newrelic.NewApplication(
+		newrelic.ConfigAppName(appName),
+		newrelic.ConfigLicense(apiKey),
+		newrelic.ConfigDistributedTracerEnabled(true),
+	)
 }
