@@ -1,3 +1,6 @@
+# github.com/BurntSushi/toml v0.3.1
+## explicit
+github.com/BurntSushi/toml
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
@@ -24,6 +27,12 @@ github.com/go-playground/validator/v10
 # github.com/golang/protobuf v1.3.3
 ## explicit; go 1.12
 github.com/golang/protobuf/proto
+# github.com/ilyakaznacheev/cleanenv v1.2.6
+## explicit; go 1.13
+github.com/ilyakaznacheev/cleanenv
+# github.com/joho/godotenv v1.3.0
+## explicit
+github.com/joho/godotenv
 # github.com/json-iterator/go v1.1.9
 ## explicit; go 1.12
 github.com/json-iterator/go
@@ -60,6 +69,9 @@ golang.org/x/sys/unix
 # gopkg.in/yaml.v2 v2.2.8
 ## explicit
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 ## explicit
 gopkg.in/yaml.v3
+# olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3
+## explicit; go 1.13
+olympos.io/encoding/edn
