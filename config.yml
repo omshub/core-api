@@ -1,1 +1,2 @@
 port: 1927
+newrelic_app_name: omshub/core-api
