@@ -40,7 +40,8 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
-      - name: Update Pull Request
+      - name: Generate PR comment
+        id: generate-pr-comment
         uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
@@ -63,12 +64,16 @@ jobs:
 
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+            core.setOutput("comment", output);
+      - name: Add comment to PR
+        id: comment_to_pr
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ github.event.issue.number }}
+          header: terraform
+          message: |
+            ${{ steps.generate-pr-comment.outputs.comment }}
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
