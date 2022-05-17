@@ -17,6 +17,7 @@ jobs:
         working-directory: ./ops
     env:
       TF_VAR_do_token: '${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}'
+      TF_VAR_newrelic_api_key: '${{ secrets.NEWRELIC_API_KEY }}'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
