@@ -20,6 +20,8 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+variable "newrelic_api_key" {}
+
 resource "digitalocean_app" "app-core-api" {
   spec {
     name   = "core-api"
@@ -36,6 +38,19 @@ resource "digitalocean_app" "app-core-api" {
 
       routes {
         path = "/"
+      }
+
+      env {
+        key   = "NEWRELIC_API_KEY"
+        value = var.newrelic_api_key
+        scope = "RUN_TIME"
+        type  = "SECRET"
+      }
+
+      env {
+        key   = "NEWRELIC_APP_NAME"
+        value = "omshub/core-api"
+        scope = "RUN_TIME"
       }
 
       github {
