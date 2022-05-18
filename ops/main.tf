@@ -51,3 +51,11 @@ resource "digitalocean_app" "app_core_api" {
     }
   }
 }
+
+output "do_app_url" {
+  value = digitalocean_app.app_core_api.live_url
+}
+
+output "do_app_deployment_id" {
+  value = digitalocean_app.app_core_api.active_deployment_id
+}

@@ -24,6 +24,8 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          # see https://stackoverflow.com/questions/69925970/how-to-save-terraform-output-variable-into-a-github-action-s-environment-variabl
+          terraform_wrapper: false
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
@@ -60,6 +62,8 @@ jobs:
 
             </details>
 
+            _You can view deployment details after merge under the *Output Terraform vars* GitHub Actions step._
+
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
             core.setOutput("comment", output);
@@ -72,15 +76,18 @@ jobs:
           header: terraform
           message: |
             ${{ steps.generate-pr-comment.outputs.comment }}
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
 
-      # Apply changes only after merge.
+      # These jobs execute after merge only.
       - name: Terraform Apply 
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: apply
         run: terraform apply -auto-approve -input=false
-
+      - name: Output Terraform vars
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          echo "DigitalOcean app URL: $(terraform output -raw do_app_url)"
+          echo "DigitalOcean deployment ID: $(terraform output -raw do_app_deployment_id)"
+      
   application:
     runs-on: ubuntu-latest
     needs: infrastructure
