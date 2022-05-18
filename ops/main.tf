@@ -28,6 +28,12 @@ resource "digitalocean_app" "app_core_api" {
     name   = "core-api"
     region = "nyc"
 
+    # CNAME record needs to be manually configured in Google Domains
+    # to route to the do_app_url TF output var.
+    domain {
+      name = "api.omshub.org"
+    }
+
     service {
       name               = "core-api"
       instance_count     = 1
