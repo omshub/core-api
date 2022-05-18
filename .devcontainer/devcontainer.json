@@ -22,7 +22,8 @@
 	"extensions": [
 		"golang.Go",
 		"mhutchie.git-graph",
-		"ms-vscode.makefile-tools"
+		"ms-vscode.makefile-tools",
+		"hashicorp.terraform"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
