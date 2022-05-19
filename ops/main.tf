@@ -16,8 +16,9 @@ terraform {
   }
 }
 
-# This is set by GitHub Actions from a repository secret.
+# These are set by GitHub Actions from repository secrets.
 variable "do_token" {}
+variable "newrelic_api_key" {}
 
 provider "digitalocean" {
   token = var.do_token
@@ -46,6 +47,19 @@ resource "digitalocean_app" "app_core_api" {
 
       routes {
         path = "/"
+      }
+
+      env {
+        key   = "NEWRELIC_API_KEY"
+        value = var.newrelic_api_key
+        scope = "RUN_TIME"
+        type  = "SECRET"
+      }
+
+      env {
+        key   = "NEWRELIC_APP_NAME"
+        value = "omshub/core-api"
+        scope = "RUN_TIME"
       }
 
       # DO pulls from this repo to build and deploy.

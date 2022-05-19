@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 type Server struct {
@@ -14,8 +16,17 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func NewServer(config Config) *Server {
+// Dependencies provides a crude means of dependency injection.
+type Dependencies struct {
+	NewRelicApp *newrelic.Application // All operations on this are nil-safe. No mocks required for testing.
+}
+
+func NewServer(config Config, deps Dependencies) *Server {
 	router := gin.Default()
+
+	if deps.NewRelicApp != nil {
+		router.Use(nrgin.Middleware(deps.NewRelicApp))
+	}
 
 	httpServer := &http.Server{
 		Addr:    ":" + config.Port,
