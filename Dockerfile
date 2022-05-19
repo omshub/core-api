@@ -15,4 +15,6 @@ WORKDIR /root/
 
 COPY --from=builder /app/core-api /usr/local/bin/
 
+COPY config.yml config.yml
+
 CMD ["core-api"]
