@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/stretchr/testify/require"
 )
 
@@ -39,7 +40,9 @@ func TestPing(t *testing.T) {
 }
 
 func testServer(t *testing.T) func() {
-	server := NewServer(DefaultConfig())
+	var cfg Config
+	require.NoError(t, cleanenv.ReadEnv(&cfg))
+	server := NewServer(cfg)
 
 	go func() {
 		_ = server.Serve()
