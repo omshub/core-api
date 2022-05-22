@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"net/http"
+	"omshub/core-api/internal/api/db"
+	"omshub/core-api/internal/api/db/handlers"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +24,9 @@ type Dependencies struct {
 }
 
 func NewServer(config Config, deps Dependencies) *Server {
+	DB := db.Init()
+	h := handlers.New(DB)
+
 	router := gin.Default()
 
 	if deps.NewRelicApp != nil {
@@ -41,6 +46,12 @@ func NewServer(config Config, deps Dependencies) *Server {
 
 	router.GET("/", server.Index)
 	router.GET("/ping", server.Ping)
+
+	router.GET("/review", h.GetAllReviews)
+	router.GET("/review/:id", h.GetOneReview)
+	router.POST("/review", h.AddReview)
+	router.PUT("/review/:id", h.UpdateReview)
+	router.DELETE("/review/:id", h.DeleteReview)
 
 	return server
 }
