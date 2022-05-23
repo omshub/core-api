@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h handler) AddReview(c *gin.Context) {
+func (h Handler) AddReview(c *gin.Context) {
 	var review models.Review
 
 	if err := c.BindJSON(&review); err != nil {
@@ -26,7 +26,7 @@ func (h handler) AddReview(c *gin.Context) {
 	c.JSON(http.StatusOK, &review)
 }
 
-func (h handler) GetOneReview(c *gin.Context) {
+func (h Handler) GetOneReview(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var review models.Review
 	if err := h.DB.Where("id = ?", id).First(&review).Error; err != nil {
@@ -37,7 +37,7 @@ func (h handler) GetOneReview(c *gin.Context) {
 	}
 }
 
-func (h handler) GetAllReviews(c *gin.Context) {
+func (h Handler) GetAllReviews(c *gin.Context) {
 	var reviews []models.Review
 	if err := h.DB.Find(&reviews).Error; err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
@@ -47,7 +47,7 @@ func (h handler) GetAllReviews(c *gin.Context) {
 	}
 }
 
-func (h handler) UpdateReview(c *gin.Context) {
+func (h Handler) UpdateReview(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var review models.Review
 	if err := h.DB.Where("id = ?", id).First(&review).Error; err != nil {
@@ -63,7 +63,7 @@ func (h handler) UpdateReview(c *gin.Context) {
 	}
 }
 
-func (h handler) DeleteReview(c *gin.Context) {
+func (h Handler) DeleteReview(c *gin.Context) {
 	id := c.Params.ByName("id")
 	var review models.Review
 	h.DB.Where("id = ?", id).Delete(&review)

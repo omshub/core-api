@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"omshub/core-api/internal/api"
+	"omshub/core-api/internal/api/db"
+	"omshub/core-api/internal/api/db/handlers"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/newrelic/go-agent/v3/newrelic"
@@ -28,7 +30,12 @@ func main() {
 		serverDeps.NewRelicApp = app
 	}
 
+	DB := db.Init()
+	h := handlers.New(DB)
+
 	server := api.NewServer(cfg, serverDeps)
+
+	server.AddHandler(h)
 
 	_ = server.Serve()
 }
