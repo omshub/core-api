@@ -14,7 +14,7 @@ func Init() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&models.Review{})
+	_ = db.AutoMigrate(&models.Review{})
 
 	return db
 }
