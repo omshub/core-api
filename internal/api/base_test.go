@@ -41,8 +41,9 @@ func TestPing(t *testing.T) {
 
 func testServer(t *testing.T) func() {
 	var cfg Config
+	var deps Dependencies
 	require.NoError(t, cleanenv.ReadEnv(&cfg))
-	server := NewServer(cfg)
+	server := NewServer(cfg, deps)
 
 	go func() {
 		_ = server.Serve()

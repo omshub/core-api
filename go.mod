@@ -5,6 +5,8 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/ilyakaznacheev/cleanenv v1.2.6
+	github.com/newrelic/go-agent/v3 v3.15.2
+	github.com/newrelic/go-agent/v3/integrations/nrgin v1.1.2
 	github.com/stretchr/testify v1.7.1
 )
 
@@ -25,7 +27,11 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
+	golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3 // indirect
 	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a // indirect
+	golang.org/x/text v0.3.2 // indirect
+	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55 // indirect
+	google.golang.org/grpc v1.27.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
