@@ -7,14 +7,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func Init() *gorm.DB {
-	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432 sslmode=disable"
+func NewDB(dsn string) (*gorm.DB, error) {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		panic(err.Error())
 	}
 
-	_ = db.AutoMigrate(&models.Review{})
+	err = db.AutoMigrate(&models.Review{})
 
-	return db
+	// return migration error
+	return db, err
 }

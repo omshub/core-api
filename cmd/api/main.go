@@ -1,11 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"omshub/core-api/internal/api"
 	"omshub/core-api/internal/api/db"
-	"omshub/core-api/internal/api/db/handlers"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/newrelic/go-agent/v3/newrelic"
@@ -30,12 +30,16 @@ func main() {
 		serverDeps.NewRelicApp = app
 	}
 
-	DB := db.Init()
-	h := handlers.New(DB)
+	if db, err := db.NewDB(fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		cfg.HostDB, cfg.UserDB, cfg.PasswordDB, cfg.NameDB, cfg.PortDB),
+	); err != nil {
+		log.Printf("[warn] DB auto migration failed: %s\n", err)
+	} else {
+		serverDeps.DB = db
+	}
 
 	server := api.NewServer(cfg, serverDeps)
-
-	server.AddHandler(h)
 
 	_ = server.Serve()
 }
