@@ -4,3 +4,4 @@
 core-api
 .terraform
 .terraform.*
+bin/*
