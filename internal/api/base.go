@@ -3,10 +3,12 @@ package api
 import (
 	"context"
 	"net/http"
+	"omshub/core-api/internal/api/handlers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/newrelic/go-agent/v3/integrations/nrgin"
 	"github.com/newrelic/go-agent/v3/newrelic"
+	"gorm.io/gorm"
 )
 
 type Server struct {
@@ -18,6 +20,7 @@ type Server struct {
 // Dependencies provides a crude means of dependency injection.
 type Dependencies struct {
 	NewRelicApp *newrelic.Application // All operations on this are nil-safe. No mocks required for testing.
+	DB          *gorm.DB
 }
 
 func NewServer(config Config, deps Dependencies) *Server {
@@ -25,6 +28,15 @@ func NewServer(config Config, deps Dependencies) *Server {
 
 	if deps.NewRelicApp != nil {
 		router.Use(nrgin.Middleware(deps.NewRelicApp))
+	}
+
+	if deps.DB != nil {
+		reviews := router.Group("/reviews")
+		reviews.GET("", handlers.NewGetAllReviewsHandler(deps.DB))
+		reviews.GET("/:id", handlers.NewGetOneReviewHandler(deps.DB))
+		reviews.POST("", handlers.NewAddReviewHandler(deps.DB))
+		reviews.PUT("/:id", handlers.NewUpdateReviewHandler(deps.DB))
+		reviews.DELETE(":id", handlers.NewDeleteReviewHandler(deps.DB))
 	}
 
 	httpServer := &http.Server{
