@@ -3,7 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
-	"omshub/core-api/internal/api/db/handlers"
+	"omshub/core-api/internal/api/handlers"
 	"time"
 
 	"github.com/gin-gonic/gin"
