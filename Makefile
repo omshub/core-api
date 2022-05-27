@@ -13,12 +13,11 @@ test-ci:
 build:
 	go build -o $(BIN) $(ENTRYPOINT)
 
-# ensures that dependencies have been tidied and vendored
+# ensures that dependencies have been tidied
 .PHONY: ensure-deps
 ensure-deps:
 	@go mod download
 	@go mod tidy
-	@go mod vendor
 	@git diff --exit-code
 
 .PHONY: fmt-deps
