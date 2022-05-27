@@ -32,13 +32,12 @@ func NewServer(config Config, deps Dependencies) *Server {
 	}
 
 	if deps.DB != nil {
-		h := handlers.New(deps.DB)
 		reviews := router.Group("/reviews")
-		reviews.GET("/", h.GetAllReviews)
-		reviews.GET("/:id", h.GetOneReview)
-		reviews.POST("/", h.AddReview)
-		reviews.PUT("/:id", h.UpdateReview)
-		reviews.DELETE("/:id", h.DeleteReview)
+		reviews.GET("", handlers.NewGetAllReviewsHandler(deps.DB))
+		reviews.GET("/:id", handlers.NewGetOneReviewHandler(deps.DB))
+		reviews.POST("", handlers.NewAddReviewHandler(deps.DB))
+		reviews.PUT("/:id", handlers.NewUpdateReviewHandler(deps.DB))
+		reviews.DELETE(":id", handlers.NewDeleteReviewHandler(deps.DB))
 	}
 
 	httpServer := &http.Server{

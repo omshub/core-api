@@ -8,64 +8,75 @@ import (
 	"omshub/core-api/internal/api/db/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func (h Handler) AddReview(c *gin.Context) {
-	var review models.Review
+func NewAddReviewHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var review models.Review
 
-	if err := c.BindJSON(&review); err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		fmt.Println(err)
-	}
-
-	if result := h.DB.Create(&review); result.Error != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		fmt.Println(result.Error)
-	}
-
-	c.JSON(http.StatusOK, &review)
-}
-
-func (h Handler) GetOneReview(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var review models.Review
-	if err := h.DB.Where("id = ?", id).First(&review).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		fmt.Println(err)
-	} else {
-		c.JSON(http.StatusOK, review)
-	}
-}
-
-func (h Handler) GetAllReviews(c *gin.Context) {
-	var reviews []models.Review
-	if err := h.DB.Find(&reviews).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		fmt.Println(err)
-	} else {
-		c.JSON(http.StatusOK, reviews)
-	}
-}
-
-func (h Handler) UpdateReview(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var review models.Review
-	if err := h.DB.Where("id = ?", id).First(&review).Error; err != nil {
-		c.AbortWithStatus(http.StatusNotFound)
-		fmt.Println(err)
-	} else {
 		if err := c.BindJSON(&review); err != nil {
 			c.AbortWithStatus(http.StatusBadRequest)
 			fmt.Println(err)
 		}
-		h.DB.Save(&review)
-		c.JSON(http.StatusOK, review)
+
+		if result := db.Create(&review); result.Error != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(result.Error)
+		}
+
+		c.JSON(http.StatusOK, &review)
 	}
 }
 
-func (h Handler) DeleteReview(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var review models.Review
-	h.DB.Where("id = ?", id).Delete(&review)
-	c.JSON(http.StatusOK, review)
+func NewGetOneReviewHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Params.ByName("id")
+		var review models.Review
+		if err := db.Where("id = ?", id).First(&review).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(err)
+		} else {
+			c.JSON(http.StatusOK, review)
+		}
+	}
+}
+
+func NewGetAllReviewsHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var reviews []models.Review
+		if err := db.Find(&reviews).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(err)
+		} else {
+			c.JSON(http.StatusOK, reviews)
+		}
+	}
+}
+
+func NewUpdateReviewHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Params.ByName("id")
+		var review models.Review
+		if err := db.Where("id = ?", id).First(&review).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(err)
+		} else {
+			if err := c.BindJSON(&review); err != nil {
+				c.AbortWithStatus(http.StatusBadRequest)
+				fmt.Println(err)
+			}
+			db.Save(&review)
+			c.JSON(http.StatusOK, review)
+		}
+	}
+}
+
+func NewDeleteReviewHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Params.ByName("id")
+		var review models.Review
+		db.Where("id = ?", id).Delete(&review)
+		c.JSON(http.StatusOK, review)
+	}
 }
