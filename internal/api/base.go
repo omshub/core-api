@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 	"omshub/core-api/internal/api/handlers"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/newrelic/go-agent/v3/integrations/nrgin"
@@ -62,7 +61,7 @@ func (s *Server) Serve() error {
 }
 
 func (s *Server) Shutdown() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), s.config.ShutdownTimeout)
 	defer cancel()
 
 	return s.httpServer.Shutdown(ctx)

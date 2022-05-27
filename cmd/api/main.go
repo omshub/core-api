@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"net/http"
 
 	"omshub/core-api/internal/api"
 	"omshub/core-api/internal/api/db"
+	"os/signal"
+	"syscall"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/newrelic/go-agent/v3/newrelic"
@@ -41,7 +45,24 @@ func main() {
 
 	server := api.NewServer(cfg, serverDeps)
 
-	_ = server.Serve()
+	go func() {
+		if err := server.Serve(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("[error] serve: %s\n", err)
+		}
+	}()
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	<-ctx.Done()
+
+	stop()
+
+	log.Println("[info] shutting down")
+
+	if err := server.Shutdown(); err != nil {
+		log.Fatalf("[error] shutdown: %s\n", err)
+	}
 }
 
 func newRelicApplication(appName string, apiKey string) (*newrelic.Application, error) {
