@@ -3,16 +3,16 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"net/http"
-
 	"omshub/core-api/internal/api"
 	"omshub/core-api/internal/api/db"
+	"omshub/core-api/internal/pkg/newrelic-shipper"
 	"os/signal"
 	"syscall"
 
 	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/newrelic/go-agent/v3/newrelic"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -32,6 +32,13 @@ func main() {
 		log.Printf("[warn] NewRelic could not be configured: %s\n", err)
 	} else {
 		serverDeps.NewRelicApp = app
+		logHookNewRelic, err := newrelicshipper.NewLogShipHook(cfg.NewRelicAPIKey)
+		if err != nil {
+			log.Errorf("[error] error creating new logshipper: %s", err)
+		} else {
+			log.AddHook(logHookNewRelic)
+			serverDeps.NewRelicShipper = logHookNewRelic // reuse the same shipper
+		}
 	}
 
 	if db, err := db.NewDB(fmt.Sprintf(
