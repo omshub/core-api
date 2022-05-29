@@ -28,7 +28,7 @@ type Dependencies struct {
 }
 
 func NewServer(config Config, deps Dependencies) *Server {
-	router := gin.Default()
+	router := gin.New()
 
 	if deps.NewRelicApp != nil {
 		router.Use(nrgin.Middleware(deps.NewRelicApp))
