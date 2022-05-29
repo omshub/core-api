@@ -4,10 +4,13 @@ import (
 	"context"
 	"net/http"
 	"omshub/core-api/internal/api/handlers"
+	"omshub/core-api/internal/pkg/newrelic-shipper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/newrelic/go-agent/v3/integrations/nrgin"
 	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/sirupsen/logrus"
+	"github.com/toorop/gin-logrus"
 	"gorm.io/gorm"
 )
 
@@ -19,8 +22,9 @@ type Server struct {
 
 // Dependencies provides a crude means of dependency injection.
 type Dependencies struct {
-	NewRelicApp *newrelic.Application // All operations on this are nil-safe. No mocks required for testing.
-	DB          *gorm.DB
+	NewRelicApp     *newrelic.Application // All operations on this are nil-safe. No mocks required for testing.
+	NewRelicShipper *newrelicshipper.LogShipper
+	DB              *gorm.DB
 }
 
 func NewServer(config Config, deps Dependencies) *Server {
@@ -29,6 +33,11 @@ func NewServer(config Config, deps Dependencies) *Server {
 	if deps.NewRelicApp != nil {
 		router.Use(nrgin.Middleware(deps.NewRelicApp))
 	}
+	log := logrus.New()
+	if deps.NewRelicShipper != nil {
+		log.AddHook(deps.NewRelicShipper)
+	}
+	router.Use(ginlogrus.Logger(log), gin.Recovery())
 
 	if deps.DB != nil {
 		reviews := router.Group("/reviews")
