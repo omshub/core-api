@@ -7,7 +7,9 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.2.6
 	github.com/newrelic/go-agent/v3 v3.15.2
 	github.com/newrelic/go-agent/v3/integrations/nrgin v1.1.2
+	github.com/sirupsen/logrus v1.4.2
 	github.com/stretchr/testify v1.7.1
+	github.com/toorop/gin-logrus v0.0.0-20210225092905-2c785434f26f
 	gorm.io/driver/postgres v1.3.5
 	gorm.io/gorm v1.23.5
 )
@@ -32,6 +34,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
+	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
