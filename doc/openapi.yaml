@@ -1,0 +1,155 @@
+openapi: 3.0.3
+servers:
+  - url: 'http://api.localhost:1927'
+info:
+  description: This is a sample server for OMSHub. You can find out more about OMSHub API at [https://github.com/omshub/core-api](https://github.com/omshub/core-api).
+  version: 1.0.0
+  title: OMSHub Core API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /ping:
+    get:
+      summary: Test response
+      description: Returns a pong
+      operationId: Ping
+      parameters: []
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: 'pong'
+  /reviews:
+    post:
+      summary: Add a new review
+      description: ''
+      operationId: AddReview
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      security: []
+      requestBody:
+        $ref: '#/components/requestBodies/Review'
+      parameters: []
+  '/reviews/{id}':
+    get:
+      summary: Find a review by ID
+      description: Returns a single review
+      operationId: GetOneReview
+      parameters:
+        - name: id
+          in: path
+          description: ID of review to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          description: Not Found
+components:
+  schemas:
+    Review:
+      type: object
+      properties:
+        ID:
+          type: integer
+          format: int64
+        CreatedAt:
+          type: string
+          format: date-time
+        UpdatedAt:
+          type: string
+          format: date-time
+        DeletedAt:
+          type: string
+          format: date-time
+          nullable: true
+          default: null
+        CourseOfferingId:
+          type: integer
+          format: int32
+        OverallRating:
+          type: integer
+          format: int32
+        Difficulty:
+          type: integer
+          format: int32
+        WorkloadHours:
+          type: integer
+          format: int32
+        Comment:
+          type: string
+          default: ""
+      xml:
+        name: Review
+    # Review1:
+    #   type: object
+    #   properties:
+    #     CourseOfferingId:
+    #       type: integer
+    #       format: int32
+    #     OverallRating:
+    #       type: integer
+    #       format: int32
+    #     Difficulty:
+    #       type: integer
+    #       format: int32
+    #     WorkloadHours:
+    #       type: integer
+    #       format: int32
+    #     Comment:
+    #       type: string
+    #       default: ""
+    #   xml:
+    #     name: Review1
+  requestBodies:
+    Review:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              CourseOfferingId:
+                type: integer
+                format: int32
+              OverallRating:
+                type: integer
+                format: int32
+              Difficulty:
+                type: integer
+                format: int32
+              WorkloadHours:
+                type: integer
+                format: int32
+              Comment:
+                type: string
+                default: ""
+      description: Review object that needs to be added to the store
+      required: true

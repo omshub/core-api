@@ -46,3 +46,8 @@ To get started:
 * `internal/` - This is where the routes of the server are defined. They are then imported into the main application in `cmd/api/main.go`
 
 Currently there are only 2 routes defined, `/` and `/ping`.
+
+## OpenAPI 3.x specification
+
+* `doc/openapi.yaml` - This is a sample specification 3.0.3 doc, more examples can be found in https://github.com/OAI/OpenAPI-Specification
+* The yaml file can be imported to [ReDoc](https://redocly.github.io/redoc/) and Postman
