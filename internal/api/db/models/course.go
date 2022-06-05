@@ -20,3 +20,21 @@ type Course struct {
 	Name         string         `json:"name"`
 	Reviews      []Review
 }
+
+type CourseAPI struct {
+	ID           string `json:"id"`
+	Department   string `json:"department"`
+	Number       string `json:"number"`
+	Name         string `json:"name"`
+	Aliases      string `json:"aliases"`
+	Foundational bool   `json:"foundational"`
+	Deprecated   bool   `json:"deprecated"`
+	Link         string `json:"link"`
+}
+
+type CourseStatAPI struct {
+	ID            string  `json:"id"`
+	AvgRating     float32 `json:"avg_rating"`
+	AvgDifficulty float32 `json:"avg_difficulty"`
+	AvgWorkload   float32 `json:"avg_workload"`
+}

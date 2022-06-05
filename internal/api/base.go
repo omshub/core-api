@@ -61,6 +61,7 @@ func NewServer(config Config, deps Dependencies) *Server {
 			courses.GET("", handlers.NewGetAllCoursesHandler(deps.DB))
 			courses.GET("/:id", handlers.NewGetOneCourseHandler(deps.DB))
 			courses.GET("/:id/reviews", handlers.NewGetAllCourseReviewsHandler(deps.DB))
+			courses.GET("/stats", handlers.NewGetAllCourseStatReviewsHandler(deps.DB))
 			// courses.POST("", handlers.NewAddCourseHandler(deps.DB))
 			// courses.PUT("/:id", handlers.NewUpdateCourseHandler(deps.DB))
 			// courses.DELETE(":id", handlers.NewDeleteCourseHandler(deps.DB))

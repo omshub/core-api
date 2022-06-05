@@ -44,8 +44,8 @@ func NewGetOneReviewHandler(db *gorm.DB) gin.HandlerFunc {
 
 func NewGetAllReviewsHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var reviews []models.Review
-		if err := db.Find(&reviews).Error; err != nil {
+		var reviews []models.ReviewAPI
+		if err := db.Model(&models.Review{}).Find(&reviews).Error; err != nil {
 			c.AbortWithStatus(http.StatusNotFound)
 			fmt.Println(err)
 		} else {
