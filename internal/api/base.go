@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"omshub/core-api/internal/api/handlers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/newrelic/go-agent/v3/integrations/nrgin"
 	"github.com/newrelic/go-agent/v3/newrelic"
@@ -25,6 +26,15 @@ type Dependencies struct {
 
 func NewServer(config Config, deps Dependencies) *Server {
 	router := gin.Default()
+
+	// - All origin allowed
+	// - GET, POST, PUT, PATCH, DELETE, HEAD methods
+	// - Credentials share enabled
+	// - Preflight requests cached for 12 hours
+	configCORS := cors.DefaultConfig()
+	configCORS.AllowAllOrigins = true
+	configCORS.AllowCredentials = true
+	router.Use(cors.New(configCORS))
 
 	if deps.NewRelicApp != nil {
 		router.Use(nrgin.Middleware(deps.NewRelicApp))
