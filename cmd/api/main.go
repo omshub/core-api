@@ -34,10 +34,7 @@ func main() {
 		serverDeps.NewRelicApp = app
 	}
 
-	if db, err := db.NewDB(fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		cfg.HostDB, cfg.UserDB, cfg.PasswordDB, cfg.NameDB, cfg.PortDB),
-	); err != nil {
+	if db, err := db.NewDB(fmt.Sprintf("%s?sslmode=require", cfg.DATABASE_URL)); err != nil {
 		log.Printf("[warn] DB auto migration failed: %s\n", err)
 	} else {
 		serverDeps.DB = db
