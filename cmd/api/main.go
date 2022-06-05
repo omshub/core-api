@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"omshub/core-api/internal/api"
 	"omshub/core-api/internal/api/db"
@@ -34,7 +35,14 @@ func main() {
 		serverDeps.NewRelicApp = app
 	}
 
-	if db, err := db.NewDB(fmt.Sprintf("%s?sslmode=require", cfg.DATABASE_URL)); err != nil {
+	var dsn string
+	if strings.HasPrefix(cfg.DATABASE_URL, "host=localhost") {
+		dsn = fmt.Sprintf("%s sslmode=disable", cfg.DATABASE_URL)
+	} else {
+		dsn = fmt.Sprintf("%s?sslmode=require", cfg.DATABASE_URL)
+	}
+
+	if db, err := db.NewDB(dsn); err != nil {
 		log.Printf("[warn] DB auto migration failed: %s\n", err)
 	} else {
 		serverDeps.DB = db
