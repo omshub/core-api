@@ -54,6 +54,19 @@ func NewGetAllCoursesHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+func NewGetAllCourseReviewsHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Params.ByName("id")
+		var reviews []models.Review
+		if err := db.Where("course_id = ?", id).Find(&reviews).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(err)
+		} else {
+			c.JSON(http.StatusOK, reviews)
+		}
+	}
+}
+
 func NewUpdateCourseHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Params.ByName("id")
