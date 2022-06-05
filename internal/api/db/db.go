@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"omshub/core-api/internal/api/db/models"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -49,11 +50,20 @@ func NewDB(dsn string) (*gorm.DB, error) {
 		file, _ = ioutil.ReadAll(res.Body)
 		var reviews []models.Review
 		_ = json.Unmarshal([]byte(file), &reviews)
-		db.CreateInBatches(reviews, 200)
+		for i := len(reviews) - 1; i >= 0; i-- {
+			reviews[i].CreatedAt = time.Unix(int64(reviews[i].CreatedAtLegacy/1e3), int64(reviews[i].CreatedAtLegacy%1e3)*1e3)
+			reviews[i].Legacy = true
+			db.Create(&reviews[i])
+		}
 	} else {
 		err = db.AutoMigrate(&models.Program{}, &models.Semester{}, &models.Course{}, &models.Specialization{}, &models.User{}, &models.Review{})
 	}
-	// err = db.AutoMigrate(&models.Program{}, &models.Semester{}, &models.Course{}, &models.Specialization{}, &models.User{}, &models.Review{})
+
+	if err != nil {
+		return db, err
+	}
+
+	err = db.Migrator().DropColumn(&models.Review{}, "CreatedAtLegacy")
 
 	// return migration error
 	return db, err
