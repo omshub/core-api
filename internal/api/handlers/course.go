@@ -42,6 +42,28 @@ func NewGetOneCourseHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
+func NewGetOneCourseStatsHandler(db *gorm.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Params.ByName("id")
+		var courseStat []models.CourseStatAPI
+		if err := db.Raw(`
+			SELECT
+			course_id id,
+			AVG(NULLIf(rating, 0)) avg_rating, 
+			AVG(NULLIf(difficulty, 0)) avg_difficulty, 
+			AVG(NULLIf(workload, 0)) avg_workload 
+			FROM reviews 
+			WHERE course_id = ?
+			GROUP BY 1
+		`, id).Scan(&courseStat).Error; err != nil {
+			c.AbortWithStatus(http.StatusNotFound)
+			fmt.Println(err)
+		} else {
+			c.JSON(http.StatusOK, courseStat)
+		}
+	}
+}
+
 func NewGetAllCoursesHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var courses []models.CourseAPI
@@ -54,10 +76,18 @@ func NewGetAllCoursesHandler(db *gorm.DB) gin.HandlerFunc {
 	}
 }
 
-func NewGetAllCourseStatReviewsHandler(db *gorm.DB) gin.HandlerFunc {
+func NewGetAllCourseStatsHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var courseStat []models.CourseStatAPI
-		if err := db.Raw("SELECT course_id id, AVG(NULLIf(rating, ?)) avg_rating, AVG(NULLIf(difficulty, ?)) avg_difficulty, AVG(NULLIf(workload, ?)) avg_workload FROM reviews GROUP BY 1", 0, 0, 0).Scan(&courseStat).Error; err != nil {
+		if err := db.Raw(`
+		SELECT 
+		course_id id, 
+		AVG(NULLIf(rating, 0)) avg_rating, 
+		AVG(NULLIf(difficulty, 0)) avg_difficulty, 
+		AVG(NULLIf(workload, 0)) avg_workload 
+		FROM reviews 
+		GROUP BY 1
+	`).Scan(&courseStat).Error; err != nil {
 			c.AbortWithStatus(http.StatusNotFound)
 			fmt.Println(err)
 		} else {
