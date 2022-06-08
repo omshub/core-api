@@ -12,7 +12,9 @@ import (
 )
 
 func NewDB(dsn string) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		PrepareStmt: true,
+	})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -48,10 +50,16 @@ func NewDB(dsn string) (*gorm.DB, error) {
 
 		res, _ = http.Get("https://omshub-data.s3.amazonaws.com/data/omscentral_reviews.json")
 		file, _ = ioutil.ReadAll(res.Body)
+		var reviewsLegacy []models.ReviewLegacy
 		var reviews []models.Review
+		_ = json.Unmarshal([]byte(file), &reviewsLegacy)
 		_ = json.Unmarshal([]byte(file), &reviews)
+
 		for i := len(reviews) - 1; i >= 0; i-- {
-			reviews[i].CreatedAt = time.Unix(int64(reviews[i].CreatedAtLegacy/1e3), int64(reviews[i].CreatedAtLegacy%1e3)*1e3)
+			reviews[i].CreatedAt = time.Unix(int64(reviewsLegacy[i].Created/1e3), int64(reviewsLegacy[i].Created%1e3)*1e3)
+			reviews[i].Rating = uint(reviewsLegacy[i].Rating)
+			reviews[i].Difficulty = uint(reviewsLegacy[i].Difficulty)
+			reviews[i].Workload = uint(reviewsLegacy[i].Workload)
 			reviews[i].Legacy = true
 			db.Create(&reviews[i])
 		}
@@ -62,8 +70,6 @@ func NewDB(dsn string) (*gorm.DB, error) {
 	if err != nil {
 		return db, err
 	}
-
-	err = db.Migrator().DropColumn(&models.Review{}, "CreatedAtLegacy")
 
 	// return migration error
 	return db, err

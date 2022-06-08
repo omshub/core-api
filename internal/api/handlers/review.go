@@ -32,8 +32,8 @@ func NewAddReviewHandler(db *gorm.DB) gin.HandlerFunc {
 func NewGetOneReviewHandler(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Params.ByName("id")
-		var review models.Review
-		if err := db.Where("id = ?", id).First(&review).Error; err != nil {
+		var review models.ReviewAPI
+		if err := db.Model(&models.Review{}).Where("id = ?", id).First(&review).Error; err != nil {
 			c.AbortWithStatus(http.StatusNotFound)
 			fmt.Println(err)
 		} else {
