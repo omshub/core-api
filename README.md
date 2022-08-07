@@ -1,3 +1,7 @@
+# [NOTICE] - DEPRECATED
+
+This app is no longer under active development as of June 2022. As of July 2022, the OMSHub [website](https://github.com/omshub/website) project shall use Firebase moving forward as a "backend service" instead.
+
 # OMSHUB backend API (stub)
 
 Go project using Gin router - https://github.com/gin-gonic/gin
